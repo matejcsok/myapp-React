@@ -4,9 +4,30 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const mongoose = require('mongoose')
+const {Todo} = require('./todo')
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+
+var router = express.Router();
+
+
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost:27017/TodoApp');
+
+console.log('mongodb connection up')
+
+var userId = '5a3e86266ba479f0045466b0'
+
+Todo.findById(userId).then(doc => {
+
+},).catch(e => {
+  if (!ObjectID.isValid(userId)) {
+      console.log('ID is not valid\n',e.message);
+  }
+});
+
 
 var app = express();
 
@@ -24,6 +45,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
+app.get('/matejcsok', (req, res) =>Todo.findById(userId).then(doc => res.send(JSON.stringify(doc))))
+
+app.post('/matejcsok', (req, res) => {
+  console.log(req.body.text)
+  res.send()
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -42,5 +69,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
 
 module.exports = app;
