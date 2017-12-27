@@ -1,0 +1,11 @@
+body{
+    padding: 50px;
+    font: 14px "Lucida Grande";
+    width: 50%;
+    margin: 0 auto;
+}
+
+.details{
+    font: 12px;
+    color: blue;
+}
