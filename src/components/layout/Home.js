@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import Zones from '../containers/Zones'
 import Todo from '../view/Todo'
-import Header from '../Header'
+import styles from '../styles';
+
 // import Comments from '../continers/Comments'
 import axios from 'axios'
 class Home extends Component {
@@ -26,7 +26,7 @@ class Home extends Component {
     // }
     render() {
         return (
-            <div className="container">
+            <div style={styles.universal.container}>
                 {this.props.name} <br />
                 {this.state.matejcsok && this.state.matejcsok.data.text}<br />
                 {this.props.todos}

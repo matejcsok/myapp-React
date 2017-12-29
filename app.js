@@ -46,6 +46,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
+app.use('/singup', index);
 app.use('/users', users);
 app.get('/matejcsok', (req, res) => Todo.find({}, 'text').then(doc => res.send(JSON.stringify(doc))).catch(e => {
     console.log('Shit happens', e)

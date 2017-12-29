@@ -1,6 +1,9 @@
 export default {
     universal: {
-
+        container: {
+            margin: '0 auto',
+            width: '80%'
+        }
     },
     insertComment: {
         input: {
