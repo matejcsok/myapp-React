@@ -1,23 +1,14 @@
 import React from 'react';
+import { Menu } from 'semantic-ui-react'
 
+const items = [
+    { key: 'editorials', active: true, name: 'Editorials' },
+    { key: 'review', name: 'Reviews' },
+    { key: 'events', name: 'Upcoming Events' },
+];
 
-class Header extends React.Component {
-
-    render() {
-        return (
-            <div>
-                <nav>
-                    <div className="container-fluid">
-                        <div className="navbar-header">
-                            <a className="navbar-brand" href="#">
-                                Menu 1
-                            </a>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-        )
-    }
-}
+const Header = () => (
+    <Menu items={items} />
+);
 
 export default Header;

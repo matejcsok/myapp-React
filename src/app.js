@@ -1,14 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Home from './components/layout/Home';
+import Header from './components/Header';
+
+import {BrowserRouter, Route} from 'react-router-dom';
+
 import {Provider} from 'react-redux'
 import initStore from './store'
 const store = initStore();
+
 class App extends React.Component {
     render() {
-        return(
+        return (
             <Provider store={store}>
-                <Home />
+                <div>
+                    <Header/>
+                    <Home />
+                </div>
+
             </Provider>
         )
     }
@@ -16,6 +25,11 @@ class App extends React.Component {
 
 
 ReactDOM.render(
-    <App />,
+    <BrowserRouter>
+        <div>
+            <Route path="/" component={App}/>
+
+        </div>
+    </BrowserRouter>,
     document.getElementById("root")
-)
+);

@@ -11,7 +11,13 @@ class Home extends Component {
         this.state = { matejcsok: null }
     }
     componentDidMount() {
-        axios.get('/matejcsok').then(data => this.setState({ matejcsok: data }))
+        axios.get('/matejcsok').then(data => {
+            this.setState({ matejcsok: data })
+            // console.log(data.data.map(item => Object.values(item)).map(item => item[1]))
+            const fromDb = data.data.map(item => Object.values(item)).map(item => item[1])
+            this.props.fillTodos(fromDb)
+        })
+
     }
     // postData(data){
     //     axios.post('/matejcsok', {
@@ -30,17 +36,15 @@ class Home extends Component {
                     </div>
                     <div className="col-md-8">
                         <input type="text" name="data" ref={node => this.inputField = node} />
-                        <button onClick={() => this.props.addTodo(this.inputField.value)}>Add to todo</button>
+                        <button onClick={(data) => {this.props.addTodo(this.inputField.value);
+                        axios.post('/matejcsok', { text: this.inputField.value }).then(res => res )
+                        }}>Add to todo</button>
                         <button onClick={() => this.props.changeName(this.inputField.value)}>change Name</button>
                         <button onClick={() => this.props.deleteName()}>delete name</button>
                         <button onClick={data => axios.post('/matejcsok',
                             { text: this.inputField.value }).then(res => console.log(res))
                         }>submit</button>
-
-                        <ul>
-                            {this.props.todos.map((todo, i) => <li key={i}><Todo deleteTodo={this.props.deleteTodo} todo={todo} index={i} /></li>)}
-                        </ul>
-
+                            {this.props.todos.map((todo, i) => <Todo  key={i} deleteTodo={this.props.deleteTodo} todo={todo} index={i} />)}
                     </div>
                 </div>
             </div>
@@ -60,5 +64,6 @@ export default connect(
         changeName: newName => dispatch({ type: 'EDIT_NAME', newName }),
         deleteName: () => dispatch({ type: 'DELETE_NAME' }),
         addTodo: newTodo => dispatch({ type: 'ADD_TODO', newTodo }),
-        deleteTodo: currentTodo => dispatch({ type: 'DELETE_TODO', currentTodo })
+        deleteTodo: currentTodo => dispatch({ type: 'DELETE_TODO', currentTodo }),
+        fillTodos: fromDb => dispatch({type: 'FILL_TODOS', fromDb})
     }))(Home);
