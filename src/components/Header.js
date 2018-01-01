@@ -23,7 +23,10 @@ export default class Header extends Component {
 
                     <Menu.Item>
                         <form  action="/singup">
-                            <Button primary>Sign Up</Button>
+                            <Button primary>SignUp</Button>
+                        </form>
+                        <form  action="/login">
+                            <Button primary>LogIn</Button>
                         </form>
 
                     </Menu.Item>

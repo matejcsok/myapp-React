@@ -5,6 +5,6 @@ const Todo = ({todo, deleteTodo, index}) => (
         {todo}
         <button onClick={() => deleteTodo(index)}>Delete</button>
     </div>
-)
+);
 
 export default Todo

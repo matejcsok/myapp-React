@@ -20,17 +20,9 @@ var UserSchema = new mongoose.Schema({
         required: true,
         minlength: 6,
     },
-    tokens: [{
-        access: {
-            type: String,
-            required: true,
-        },
-        token: {
-            type: String,
-            required: true,
-        },
-    }]
+
 });
+
 
 
 UserSchema.methods.toJSON = function () {

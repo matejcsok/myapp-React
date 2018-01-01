@@ -8,30 +8,25 @@ const mongoose = require('mongoose');
 const {Todo} = require('./todo');
 const {User} = require('./user');
 const _ = require('lodash');
+const bcrypt = require('bcryptjs');
+const session = require('express-session');
+
 
 const index = require('./routes/index');
 const users = require('./routes/users');
 
 const router = express.Router();
 
-
+// setup mongo db connection
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/TodoApp');
+mongoose.connect('mongodb://localhost:27017/TodoApp', { useMongoClient: true });
 
 console.log('mongodb connection up');
 
-// var userId = '5a3e86266ba479f0045466b0'
 
-// Todo.find(userId).then(doc => {
-
-// }, ).catch(e => {
-//   if (!ObjectID.isValid(userId)) {
-//     console.log('ID is not valid\n', e.message);
-//   }
-// });
+const app = express();
 
 
-var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -45,19 +40,66 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// set routes for react router to use them
 app.use('/', index);
 app.use('/singup', index);
+app.use('/login', index);
 app.use('/users', users);
-app.get('/matejcsok', (req, res) => Todo.find({}, 'text').then(doc => res.send(JSON.stringify(doc))).catch(e => {
-    console.log('Shit happens', e)
-}));
 
+//send todos from db to frontend
+// app.get('/matejcsok', (req, res) => Todo.find({}, 'text').then(doc => res.send(JSON.stringify(doc))).catch(e => {
+//     console.log('Shit happens', e)
+// }));
+
+// todos sent from front end => save to the db
 app.post('/matejcsok', (req, res) => {
     const newTodo = new Todo({
         text: req.body.text
     });
     newTodo.save();
     res.send()
+});
+
+// send all the users from db to frontend
+app.get('/username', (req, res) => {
+
+    User.find({}).then(users => {
+        res.send(users);
+        //console.log(users)
+
+    });
+});
+
+// user sent from frontend => to save to the db
+app.post('/username', (req, res) => {
+
+    const body = _.pick(req.body, ['email', 'password']);
+
+    let salt = bcrypt.genSaltSync(10);
+    let password = bcrypt.hashSync(body.password, salt);
+    body.password = password;
+
+
+
+    // session cookie
+
+    let user = new User(body);
+
+    user.save().then(user => console.log(user));
+    res.send();
+});
+
+app.get('/loginuser', (req, res) => {
+    res.send('loginuser');
+});
+
+app.post('/loginuser', (req, res) => {
+   const body = _.pick(req.body, ['email', 'password']);
+    console.log(body);
+
+    Todo.find({text: 'valami'}, 'text').then(doc => res.send(JSON.stringify(doc))).catch(e => {
+        console.log('Shit happens', e)
+    })
 });
 
 // POST/users

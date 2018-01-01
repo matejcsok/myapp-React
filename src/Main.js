@@ -2,6 +2,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Home from './components/layout/Home';
 import Singup from './Singup';
+import Login from './Login';
 
 
 // The Main component renders one of the three provided
@@ -14,6 +15,7 @@ const Main = () => (
         <Switch>
             <Route exact path='/' component={Home}/>
             <Route  path='/singup' component={Singup}/>
+            <Route  path='/login' component={Login}/>
 
         </Switch>
     </main>

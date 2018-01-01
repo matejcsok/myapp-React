@@ -7,8 +7,9 @@ const actionTypes = {
     modifyNameList: 'MODIFY_NAMES',
     addTodo: 'ADD_TODO',
     deleteTodo: 'DELETE_TODO',
-    fillTodos: 'FILL_TODOS'
-}
+    fillTodos: 'FILL_TODOS',
+    fillUsers: 'FILL_USERS',
+};
 const name = (state = '', action) => {
     switch (action.type) {
         case actionTypes.deleteName:
@@ -18,27 +19,36 @@ const name = (state = '', action) => {
         default:
             return state;
     }
-}
+};
 
 const todos = (state = [], action) => {
     switch (action.type) {
         case actionTypes.addTodo:
             return [...state, action.newTodo];
         case actionTypes.deleteTodo:
-            return state.filter((item, index) => action.currentTodo != index)
+            return state.filter((item, index) => action.currentTodo != index);
         case actionTypes.fillTodos:
-        console.log(actionTypes.fromDb)
+        console.log(actionTypes.fromDb);
             return action.fromDb;
         default:
             return state;
     }
-}
+};
 
+const user = (state = [], action) => {
+    switch (action.type){
+        case actionTypes.fillUsers:
+            return action.dbUsers;
+        default:
+            return state;
+    }
+};
 const reducers = combineReducers({
     name,
     todos,
+    user,
 
-})
+});
 
 const initStore = () => createStore(
     reducers,
