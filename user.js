@@ -3,6 +3,7 @@ const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
+const passportLocalMongoose = require('passport-local-mongoose');
 
 var UserSchema = new mongoose.Schema({
     email: {
@@ -22,7 +23,6 @@ var UserSchema = new mongoose.Schema({
     },
 
 });
-
 
 
 UserSchema.methods.toJSON = function () {
@@ -68,11 +68,12 @@ UserSchema.pre('save', function (next) {
 
     if (user.isModified('password')) {
 
-        bcrypt.genSalt(10, (err, salt) =>{
+        bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(user.password, salt, (err, hash) => {
                 user.password = hash;
                 console.log(user.password)
-            })});
+            })
+        });
 
 
         next();
@@ -82,6 +83,8 @@ UserSchema.pre('save', function (next) {
 
 
 });
+
+
 
 const User = mongoose.model('User', UserSchema);
 module.exports = {User};

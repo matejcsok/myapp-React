@@ -28,6 +28,9 @@ export default class Header extends Component {
                         <form  action="/login">
                             <Button primary>LogIn</Button>
                         </form>
+                        <form  action="/logout">
+                            <Button primary>LogOut</Button>
+                        </form>
 
                     </Menu.Item>
                 </Menu.Menu>

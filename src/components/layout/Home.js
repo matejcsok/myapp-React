@@ -8,11 +8,13 @@ import axios from 'axios'
 class Home extends Component {
     constructor(props) {
         super(props);
-        this.state = {matejcsok: null}
+        this.state = {
+            matejcsok: null,
+        }
     }
 
     componentDidMount() {
-        axios.post('/loginuser').then(data => {
+        axios.get('/matejcsok').then(data => {
             this.setState({matejcsok: data});
             // console.log(data.data.map(item => Object.values(item)).map(item => item[1]))
             const fromDb = data.data.map(item => Object.values(item)).map(item => item[1]);

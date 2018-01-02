@@ -34,11 +34,11 @@ class Login extends React.Component {
                                placeholder='Password'/>
                     </Form.Field>
 
-                    <Button onClick={data => axios.post('/loginuser', {
+                    <Button onClick={data => axios.post('/login', {
                         email: this.email.value,
                         password: this.password.value,
                     }).then(() => this.setState({redirect: true}))
-                        .catch(e => console.log('Error: ',e))} type='submit'>Submit</Button>
+                        .catch(e => console.log('Error: ', e))} type='submit'>Submit</Button>
                 </Form>
             </div>
         )

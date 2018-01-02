@@ -46,7 +46,7 @@ class Singup extends React.Component {
                                placeholder='Password'/>
                     </Form.Field>
 
-                    <Button onClick={data => axios.post('/username', {
+                    <Button onClick={data => axios.post('/singup', {
                         email: this.email.value,
                         password: this.password.value,
                     }).then(() => this.setState({redirect: true}))} type='submit'>Submit</Button>
