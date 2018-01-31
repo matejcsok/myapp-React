@@ -10897,21 +10897,25 @@ var Home = function (_Component) {
             return _react2.default.createElement(
                 'div',
                 { style: { width: '80%', margin: 'auto' } },
-                _react2.default.createElement('input', { style: { marginBottom: '20px', borderRadius: '4px', width: '400px', height: '34px' }, type: 'text', name: 'data', ref: function ref(node) {
-                        return _this3.inputField = node;
-                    } }),
                 _react2.default.createElement(
-                    'button',
-                    { onClick: function onClick(data) {
-                            _this3.props.addTodo(_this3.inputField.value);
-                            _axios2.default.post('/matejcsok', { text: _this3.inputField.value }).then(function (res) {
-                                return res;
-                            });
-                        } },
-                    'Add new todo'
+                    'div',
+                    { style: { display: 'flex' } },
+                    _react2.default.createElement('input', { style: { marginBottom: '20px', borderRadius: '4px', width: '400px', height: '34px', flex: '1' }, type: 'text', name: 'data', ref: function ref(node) {
+                            return _this3.inputField = node;
+                        } }),
+                    _react2.default.createElement(
+                        'button',
+                        { style: { flex: '0.2', height: '34px' }, onClick: function onClick(data) {
+                                _this3.props.addTodo(_this3.inputField.value);
+                                _axios2.default.post('/matejcsok', { text: _this3.inputField.value }).then(function (res) {
+                                    return res;
+                                });
+                            } },
+                        'Add new todo'
+                    )
                 ),
                 this.props.todos.map(function (todo, i) {
-                    return _react2.default.createElement(_Todo2.default, { key: i, deleteTodo: _this3.props.deleteTodo, todo: todo, index: i });
+                    return _react2.default.createElement(_Todo2.default, { style: { display: 'block' }, key: i, deleteTodo: _this3.props.deleteTodo, todo: todo, index: i });
                 })
             );
         }
@@ -43238,11 +43242,15 @@ var Todo = function Todo(_ref) {
         index = _ref.index;
     return _react2.default.createElement(
         'li',
-        null,
-        todo,
+        { style: { display: 'flex', marginBottom: '5px' } },
+        _react2.default.createElement(
+            'div',
+            { style: { flex: '2' } },
+            todo
+        ),
         _react2.default.createElement(
             'button',
-            { style: { marginLeft: '10px' }, onClick: function onClick(item) {
+            { style: { marginLeft: '10px', flex: '0.2' }, onClick: function onClick(item) {
                     deleteTodo(index);
                     console.log(todo);
                     console.log(item);

@@ -48,21 +48,23 @@ class Home extends Component {
 
         return (
 
-            <div style={{width: '80%', margin: 'auto'}} >
+            <div style={{width: '80%', margin: 'auto',}} >
+
+                        <div style={{ display: 'flex'}} >
+                            <input style={{marginBottom: '20px', borderRadius: '4px', width: '400px', height: '34px', flex: '1'}} type="text" name="data" ref={node => this.inputField = node}/>
+                            <button style={{flex: '0.2', height: '34px'}} onClick={(data) => {
+                                this.props.addTodo(this.inputField.value);
+                                axios.post('/matejcsok', {text: this.inputField.value}).then(res => res)
+                            }}>
+                                Add new todo
+                            </button>
+                        </div>
 
 
 
-
-                        <input style={{marginBottom: '20px', borderRadius: '4px', width: '400px', height: '34px'}} type="text" name="data" ref={node => this.inputField = node}/>
-                        <button onClick={(data) => {
-                            this.props.addTodo(this.inputField.value);
-                            axios.post('/matejcsok', {text: this.inputField.value}).then(res => res)
-                        }}>
-                            Add new todo
-                        </button>
 
                         {this.props.todos.map((todo, i) =>
-                            <Todo  key={i} deleteTodo={this.props.deleteTodo} todo={todo} index={i}/>)}
+                            <Todo style={{display: 'block'}}  key={i} deleteTodo={this.props.deleteTodo} todo={todo} index={i}/>)}
 
 
             </div>
