@@ -2,6 +2,7 @@ import React from 'react'
 import {Button, Checkbox, Form} from 'semantic-ui-react'
 import styles from './components/styles';
 
+import {connect} from 'react-redux'
 import {Redirect} from 'react-router-dom'
 import axios from 'axios';
 
@@ -18,9 +19,13 @@ class Login extends React.Component {
 
         if (redirect) {
             return <Redirect to='/'/>;
+        } else if(this.props.isLogged) {
+            return <Redirect to='/'/>;
         }
         return (
-            <div>
+            <div style={{width: '80%', margin: '0 auto'}}>
+                <h1>LogIn</h1>
+
                 <Form style={styles.universal.container}>
                     <Form.Field>
                         <label>Email</label>
@@ -45,4 +50,18 @@ class Login extends React.Component {
     }
 }
 
-export default Login;
+export default connect(
+    state => ({
+        name: state.name,
+        todos: state.todos,
+        isLogged: state.isLogged,
+    }),
+    dispatch => ({
+        changeName: newName => dispatch({type: 'EDIT_NAME', newName}),
+        deleteName: () => dispatch({type: 'DELETE_NAME'}),
+        addTodo: newTodo => dispatch({type: 'ADD_TODO', newTodo}),
+        deleteTodo: currentTodo => dispatch({type: 'DELETE_TODO', currentTodo}),
+        fillTodos: fromDb => dispatch({type: 'FILL_TODOS', fromDb}),
+        loggedIn: () => dispatch({type: 'LOGGED'}),
+        notLoggedIn: () => dispatch({type: 'NOT_LOGGED'}),
+    }))(Login);

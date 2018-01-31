@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Home from './components/layout/Home';
 import Header from './components/Header';
 import Main from './Main';
+import Footer from './Footer';
 
 import {HashRouter, BrowserRouter, Route} from 'react-router-dom';
 
@@ -14,8 +15,9 @@ class App extends React.Component {
     render() {
         return (
             <div>
-                <Header/>
-                <Main/>
+                <Header />
+                <Main />
+                <Footer />
             </div>
         )
     }

@@ -21,6 +21,22 @@ var UserSchema = new mongoose.Schema({
         required: true,
         minlength: 6,
     },
+    todo: [{
+        text: {
+            type: String,
+            required: false,
+            minlength: 1,
+            trim: true
+        },
+        completed: {
+            type: Boolean,
+            default: false
+        },
+        completedAt: {
+            type: Number,
+            default: null
+        }
+    }]
 
 });
 

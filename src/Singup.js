@@ -31,7 +31,9 @@ class Singup extends React.Component {
             return <Redirect to='/login'/>;
         }
         return (
-            <div>
+            <div style={{width: '80%', margin: '0 auto'}} >
+                <h1>SingUp</h1>
+
                 {this.props.user.map(user => user.email + '\n')}
                 <Form style={styles.universal.container}>
                     <Form.Field>

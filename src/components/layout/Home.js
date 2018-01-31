@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import Todo from '../view/Todo'
-import styles from '../styles';
+// import styles from '../styles';
+import {Redirect} from 'react-router-dom';
 
 // import Comments from '../continers/Comments'
 import axios from 'axios'
@@ -10,51 +11,61 @@ class Home extends Component {
         super(props);
         this.state = {
             matejcsok: null,
+
+
         }
     }
 
-    componentDidMount() {
-        axios.get('/matejcsok').then(data => {
-            this.setState({matejcsok: data});
-            // console.log(data.data.map(item => Object.values(item)).map(item => item[1]))
-            const fromDb = data.data.map(item => Object.values(item)).map(item => item[1]);
-            this.props.fillTodos(fromDb)
-        })
+    componentWillMount() {
+        axios.get('/matejcsok')
+            .then(data => {
+
+
+            console.log(data.data);
+            //console.log(session);
+            const fromDb = data.data;
+
+            if(data.data == false){
+                this.props.notLoggedIn()
+            } else {
+
+                this.props.loggedIn();
+                this.props.fillTodos(fromDb);
+            }
+
+
+
+        }).catch(e => console.log(e))
 
     }
 
-    // postData(data){
-    //     axios.post('/matejcsok', {
-    //         text:data
-    //     }).then(res => console.log(res))
-    // }
     render() {
+
+
+        if (!this.props.isLogged) {
+            console.log('redirectiong');
+            return <Redirect to='/login'/>;
+        }
+
         return (
-            <div style={styles.universal.container}>
-                {this.props.name} <br />
-                {this.state.matejcsok && this.state.matejcsok.data.text}<br />
-                {this.props.todos}
-                <div className="row">
-                    <div className="col-md-4">
-                        {/* <Zones /> */}
-                    </div>
-                    <div className="col-md-8">
-                        <input type="text" name="data" ref={node => this.inputField = node}/>
+
+            <div style={{width: '80%', margin: 'auto'}} >
+
+
+
+
+                        <input style={{marginBottom: '20px', borderRadius: '4px', width: '400px', height: '34px'}} type="text" name="data" ref={node => this.inputField = node}/>
                         <button onClick={(data) => {
                             this.props.addTodo(this.inputField.value);
                             axios.post('/matejcsok', {text: this.inputField.value}).then(res => res)
-                        }}>Add to todo
+                        }}>
+                            Add new todo
                         </button>
-                        <button onClick={() => this.props.changeName(this.inputField.value)}>change Name</button>
-                        <button onClick={() => this.props.deleteName()}>delete name</button>
-                        <button onClick={data => axios.post('/matejcsok',
-                            {text: this.inputField.value}).then(res => console.log(res))
-                        }>submit
-                        </button>
+
                         {this.props.todos.map((todo, i) =>
-                            <Todo key={i} deleteTodo={this.props.deleteTodo} todo={todo} index={i}/>)}
-                    </div>
-                </div>
+                            <Todo  key={i} deleteTodo={this.props.deleteTodo} todo={todo} index={i}/>)}
+
+
             </div>
         )
     }
@@ -66,12 +77,15 @@ class Home extends Component {
 export default connect(
     state => ({
         name: state.name,
-        todos: state.todos
+        todos: state.todos,
+        isLogged: state.isLogged,
     }),
     dispatch => ({
         changeName: newName => dispatch({type: 'EDIT_NAME', newName}),
         deleteName: () => dispatch({type: 'DELETE_NAME'}),
         addTodo: newTodo => dispatch({type: 'ADD_TODO', newTodo}),
         deleteTodo: currentTodo => dispatch({type: 'DELETE_TODO', currentTodo}),
-        fillTodos: fromDb => dispatch({type: 'FILL_TODOS', fromDb})
+        fillTodos: fromDb => dispatch({type: 'FILL_TODOS', fromDb}),
+        loggedIn: () => dispatch({type: 'LOGGED'}),
+        notLoggedIn: () => dispatch({type: 'NOT_LOGGED'}),
     }))(Home);

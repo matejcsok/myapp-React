@@ -1,6 +1,7 @@
-import { createStore, applyMiddleware, combineReducers } from 'redux'
-import { composeWithDevTools } from 'redux-devtools-extension';
+import {createStore, applyMiddleware, combineReducers} from 'redux'
+import {composeWithDevTools} from 'redux-devtools-extension';
 import thunkMiddleware from 'redux-thunk'
+
 const actionTypes = {
     deleteName: 'DELETE_NAME',
     editName: 'EDIT_NAME',
@@ -9,6 +10,8 @@ const actionTypes = {
     deleteTodo: 'DELETE_TODO',
     fillTodos: 'FILL_TODOS',
     fillUsers: 'FILL_USERS',
+    loggedIn: 'LOGGED',
+    notLoggedIn: 'NOT_LOGGED',
 };
 const name = (state = '', action) => {
     switch (action.type) {
@@ -28,7 +31,6 @@ const todos = (state = [], action) => {
         case actionTypes.deleteTodo:
             return state.filter((item, index) => action.currentTodo != index);
         case actionTypes.fillTodos:
-        console.log(actionTypes.fromDb);
             return action.fromDb;
         default:
             return state;
@@ -36,17 +38,30 @@ const todos = (state = [], action) => {
 };
 
 const user = (state = [], action) => {
-    switch (action.type){
+    switch (action.type) {
         case actionTypes.fillUsers:
             return action.dbUsers;
         default:
             return state;
     }
 };
+
+const isLogged = (state = '', action) => {
+    switch (action.type) {
+        case actionTypes.loggedIn:
+            return true;
+        case actionTypes.notLoggedIn:
+            return false;
+        default:
+            return state;
+    }
+};
+
 const reducers = combineReducers({
     name,
     todos,
     user,
+    isLogged,
 
 });
 
@@ -54,7 +69,8 @@ const initStore = () => createStore(
     reducers,
     {
         name: 'matejcsok',
-        todos: ['megtanulni rendesen programozni']
+        todos: ['megtanulni rendesen programozni'],
+        isLogged: false,
     },
     composeWithDevTools(applyMiddleware(thunkMiddleware)),
 );

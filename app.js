@@ -43,7 +43,11 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session({secret: 'ssshhhhh'}));
+app.use(session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: false,
+}));
 // app.use(passport.initialize());
 // app.use(passport.session()); // persistent login sessions
 
@@ -80,12 +84,24 @@ app.get('/matejcsok', (req, res) => {
 
         if (sess.email && user[0].email == sess.email && sess.password && user[0].password == sess.password) {
             console.log('logged in');
-            return Todo.find({}, 'text').then(doc => res.end(JSON.stringify(doc))).catch(e => {
-                console.log('Shit happens', e)
-            })
+            return User.find({email: sess.email})
+                .then(doc => {
+
+
+                    isLogged = true;
+                    let todoArray = doc[0].todo.map(item => item.text);
+                    res.send(JSON.stringify(todoArray))
+                })
+                .catch(e => {
+                    console.log('Shit happens', e)
+                })
         }
+
+        res.send(false);
+
+
         console.log('not logged in');
-    });
+    }).catch(e => console.log(e));
 });
 
 // app.post('/matejcsok', (req, res) => {
@@ -106,13 +122,46 @@ app.get('/matejcsok', (req, res) => {
 //
 // });
 
+app.get('/deleteTodo', (req, res) => {
+    res.send('delete');
+})
+
+app.post('/deleteTodo/:todo', (req, res) => {
+    // Favorite.update( {cn: req.params.name}, { $pullAll: {uid: [req.params.deleteUid] } } )
+    console.log(req.session.email);
+    console.log(req.params.todo);
+
+
+    User.updateOne({email: req.session.email},
+                    {$pull: {'todo': {'text': req.params.todo}}})
+        .then(item => console.log(item))
+        .catch(e => console.log(e));
+
+
+    res.send();
+});
+
 
 // todos sent from front end => save to the db
 app.post('/matejcsok', (req, res) => {
+    console.log('/matejcsok POST');
     const newTodo = new Todo({
         text: req.body.text
     });
-    newTodo.save();
+
+    console.log('EMAIL: ', sess.email);
+    console.log('NEW TODO: ', newTodo);
+
+    User.findOneAndUpdate({email: sess.email}, {
+        $push: {todo: newTodo}
+    }).then(user => console.log(user));
+
+
+//     var friend = {"firstName": req.body.fName, "lastName": req.body.lName};
+//     Users.findOneAndUpdate({name: req.user.name}, {$push: {friends: friend}});
+// };
+
+    // newTodo.save();
     res.send()
 });
 
@@ -150,12 +199,10 @@ app.post('/login', (req, res) => {
 
     const body = _.pick(req.body, ['email', 'password']);
 
-
     // add to session
     sess = req.session;
     sess.email = body.email;
     sess.password = body.password;
-
 
     res.send();
 });
