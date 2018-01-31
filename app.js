@@ -88,19 +88,21 @@ app.get('/matejcsok', (req, res) => {
                 .then(doc => {
 
 
-                    isLogged = true;
+
                     let todoArray = doc[0].todo.map(item => item.text);
                     res.send(JSON.stringify(todoArray))
                 })
                 .catch(e => {
                     console.log('Shit happens', e)
                 })
+        }else {
+            console.log('here comes the false')
+            res.send(false);
+
+
+            console.log('not logged in');
         }
 
-        res.send(false);
-
-
-        console.log('not logged in');
     }).catch(e => console.log(e));
 });
 
@@ -198,7 +200,7 @@ app.post('/singup', (req, res) => {
 app.post('/login', (req, res) => {
 
     const body = _.pick(req.body, ['email', 'password']);
-
+    console.log(body)
     // add to session
     sess = req.session;
     sess.email = body.email;

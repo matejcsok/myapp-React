@@ -20,12 +20,11 @@ class Home extends Component {
         axios.get('/matejcsok')
             .then(data => {
 
-
             console.log(data.data);
-            //console.log(session);
+
             const fromDb = data.data;
 
-            if(data.data == false){
+            if(!Array.isArray(data.data) && data.data == false){
                 this.props.notLoggedIn()
             } else {
 

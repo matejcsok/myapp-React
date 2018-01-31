@@ -10870,10 +10870,10 @@ var Home = function (_Component) {
             _axios2.default.get('/matejcsok').then(function (data) {
 
                 console.log(data.data);
-                //console.log(session);
+
                 var fromDb = data.data;
 
-                if (data.data == false) {
+                if (!Array.isArray(data.data) && data.data == false) {
                     _this2.props.notLoggedIn();
                 } else {
 
