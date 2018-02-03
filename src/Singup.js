@@ -10,7 +10,6 @@ class Singup extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: null,
             redirect: false,
         }
     }
@@ -28,7 +27,7 @@ class Singup extends React.Component {
                     {this.props.errorMessage}
                 </div>
 
-                {this.props.user.map(user => user.email + '\n')}
+
                 <Form style={styles.universal.container}>
                     <Form.Field>
                         <label>Email</label>

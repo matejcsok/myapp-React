@@ -67215,7 +67215,6 @@ var Singup = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (Singup.__proto__ || Object.getPrototypeOf(Singup)).call(this, props));
 
         _this.state = {
-            user: null,
             redirect: false
         };
         return _this;
@@ -67245,9 +67244,6 @@ var Singup = function (_React$Component) {
                     { style: { color: 'red' } },
                     this.props.errorMessage
                 ),
-                this.props.user.map(function (user) {
-                    return user.email + '\n';
-                }),
                 _react2.default.createElement(
                     _semanticUiReact.Form,
                     { style: _styles2.default.universal.container },
