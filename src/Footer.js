@@ -11,7 +11,8 @@ const Footer = () => (
     backgroundColor: '#efefef',
     textAlign: 'center',
 }}>
-    Created by Mr. Programer
+    Created by Istvan Matejcsok, 2018 <br/>
+    Github repository: <a href="https://github.com/matejcsok/myapp-React">https://github.com/matejcsok/myapp-React</a>
 </div>
 );
 

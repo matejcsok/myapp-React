@@ -67534,7 +67534,14 @@ var Footer = function Footer() {
                 backgroundColor: '#efefef',
                 textAlign: 'center'
             } },
-        'Created by Mr. Programer'
+        'Created by Istvan Matejcsok, 2018 ',
+        _react2.default.createElement('br', null),
+        'Github repository: ',
+        _react2.default.createElement(
+            'a',
+            { href: 'https://github.com/matejcsok/myapp-React' },
+            'https://github.com/matejcsok/myapp-React'
+        )
     );
 };
 

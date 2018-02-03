@@ -14,7 +14,8 @@ This is a basic Todo web application.
         -nodemon
         -than the application is running on localhost:3000
         
--Where users can get help with your project
+    Or, you can find on:
+        https://mysterious-plateau-55311.herokuapp.com/
 
 -Who maintains and contributes to the project
     -I am Istvan Matejcsok
