@@ -22,9 +22,14 @@ class Login extends React.Component {
         } else if(this.props.isLogged) {
             return <Redirect to='/'/>;
         }
+
         return (
             <div style={{width: '80%', margin: '0 auto'}}>
                 <h1>LogIn</h1>
+                <div style={{color: 'red'}}>
+                    {this.props.errorMessage}
+                </div>
+
 
                 <Form style={styles.universal.container}>
                     <Form.Field>
@@ -55,6 +60,7 @@ export default connect(
         name: state.name,
         todos: state.todos,
         isLogged: state.isLogged,
+        errorMessage: state.errorMessage,
     }),
     dispatch => ({
         changeName: newName => dispatch({type: 'EDIT_NAME', newName}),
@@ -64,4 +70,5 @@ export default connect(
         fillTodos: fromDb => dispatch({type: 'FILL_TODOS', fromDb}),
         loggedIn: () => dispatch({type: 'LOGGED'}),
         notLoggedIn: () => dispatch({type: 'NOT_LOGGED'}),
+        writeErrorMessage: message => dispatch({type: 'WRITE_ERROR_MESSAGE'})
     }))(Login);

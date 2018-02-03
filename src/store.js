@@ -12,6 +12,8 @@ const actionTypes = {
     fillUsers: 'FILL_USERS',
     loggedIn: 'LOGGED',
     notLoggedIn: 'NOT_LOGGED',
+    writeErrorMessage: 'WRITE_ERROR_MESSAGE',
+    singUpErrorMessage: 'SINGUP_ERROR_MESSAGE',
 };
 const name = (state = '', action) => {
     switch (action.type) {
@@ -57,11 +59,23 @@ const isLogged = (state = '', action) => {
     }
 };
 
+const errorMessage = (state = '', action) => {
+  switch (action.type){
+      case actionTypes.writeErrorMessage:
+          return action.message;
+      case actionTypes.singUpErrorMessage:
+          return action.message;
+      default:
+          return state;
+  }
+};
+
 const reducers = combineReducers({
     name,
     todos,
     user,
     isLogged,
+    errorMessage,
 
 });
 
@@ -71,6 +85,7 @@ const initStore = () => createStore(
         name: 'matejcsok',
         todos: ['megtanulni rendesen programozni'],
         isLogged: false,
+        errorMessage: '',
     },
     composeWithDevTools(applyMiddleware(thunkMiddleware)),
 );

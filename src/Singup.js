@@ -15,15 +15,6 @@ class Singup extends React.Component {
         }
     }
 
-    // componentDidMount() {
-    //     axios.get('/username').then(users => {
-    //         this.setState({user: users});
-    //         const dbUsers = users.data;
-    //         this.props.fillUsers(dbUsers);
-    //         console.log(users)
-    //     });
-    // }
-
     render() {
         const {redirect} = this.state;
 
@@ -33,6 +24,9 @@ class Singup extends React.Component {
         return (
             <div style={{width: '80%', margin: '0 auto'}} >
                 <h1>SingUp</h1>
+                <div style={{color: 'red'}}>
+                    {this.props.errorMessage}
+                </div>
 
                 {this.props.user.map(user => user.email + '\n')}
                 <Form style={styles.universal.container}>
@@ -60,7 +54,10 @@ class Singup extends React.Component {
 
 export default connect(
     state => ({
-        user: state.user,
+        name: state.name,
+        todos: state.todos,
+        isLogged: state.isLogged,
+        errorMessage: state.errorMessage,
     }),
     dispatch => ({
         changeName: newName => dispatch({type: 'EDIT_NAME', newName}),
@@ -68,5 +65,8 @@ export default connect(
         addTodo: newTodo => dispatch({type: 'ADD_TODO', newTodo}),
         deleteTodo: currentTodo => dispatch({type: 'DELETE_TODO', currentTodo}),
         fillTodos: fromDb => dispatch({type: 'FILL_TODOS', fromDb}),
-        fillUsers: dbUsers => dispatch({type: 'FILL_USERS', dbUsers}),
+        loggedIn: () => dispatch({type: 'LOGGED'}),
+        notLoggedIn: () => dispatch({type: 'NOT_LOGGED'}),
+        writeErrorMessage: message => dispatch({type: 'WRITE_ERROR_MESSAGE', message}),
+        singUpErrorMessage: message => dispatch({type: 'SINGUP_ERROR_MESSAGE', message}),
     }))(Singup);

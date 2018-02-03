@@ -82,7 +82,12 @@ app.get('/matejcsok', (req, res) => {
     sess = req.session;
     User.find({email: sess.email}).then(user => {
 
-        if (sess.email && user[0].email == sess.email && sess.password && user[0].password == sess.password) {
+
+        if (sess.email
+            && user[0].email == sess.email
+            && sess.password
+            && bcrypt.compare(sess.password, user[0].password)) {
+
             console.log('logged in');
             return User.find({email: sess.email})
                 .then(doc => {
@@ -90,14 +95,14 @@ app.get('/matejcsok', (req, res) => {
 
 
                     let todoArray = doc[0].todo.map(item => item.text);
-                    res.send(JSON.stringify(todoArray))
+                    res.status(200).send(JSON.stringify(todoArray))
                 })
                 .catch(e => {
                     console.log('Shit happens', e)
                 })
         }else {
-            console.log('here comes the false')
-            res.send(false);
+
+            res.status(401).send('Email, vagy a jelszó nem helyes');
 
 
             console.log('not logged in');
@@ -106,27 +111,7 @@ app.get('/matejcsok', (req, res) => {
     }).catch(e => console.log(e));
 });
 
-// app.post('/matejcsok', (req, res) => {
-//     const body = _.pick(req.body, ['email', 'password']);
-//     console.log(body);
-//
-//     User.find({email: sess.email}).then(user => {
-//
-//         if (user[0].email == sess.email && user[0].password == sess.password) {
-//             console.log('logged in');
-//             return Todo.find({}, 'text').then(doc => res.end(JSON.stringify(doc))).catch(e => {
-//                 console.log('Shit happens', e)
-//             })
-//         }
-//         console.log(' NOT logged in');
-//     });
-//     res.send()
-//
-// });
 
-app.get('/deleteTodo', (req, res) => {
-    res.send('delete');
-})
 
 app.post('/deleteTodo/:todo', (req, res) => {
     // Favorite.update( {cn: req.params.name}, { $pullAll: {uid: [req.params.deleteUid] } } )
@@ -158,12 +143,6 @@ app.post('/matejcsok', (req, res) => {
         $push: {todo: newTodo}
     }).then(user => console.log(user));
 
-
-//     var friend = {"firstName": req.body.fName, "lastName": req.body.lName};
-//     Users.findOneAndUpdate({name: req.user.name}, {$push: {friends: friend}});
-// };
-
-    // newTodo.save();
     res.send()
 });
 
@@ -181,20 +160,24 @@ app.post('/singup', (req, res) => {
 
     const body = _.pick(req.body, ['email', 'password']);
 
-    let user = new User(body);
 
-    user.save().then(user => console.log(user));
+    bcrypt.hash(body.password, saltRounds, (e, hash) =>  {
+        let user = new User({
+            email: body.email,
+            password: hash,
+        });
+
+        user.save().then(user => console.log(user)).catch(e => console.log(e.message, 'error in email, password'));
+
+    }).catch(e => console.log(e));
+
+
 
     res.send();
 });
 
 
-// app.get('/login', (req, res) => {
-//     sess = req.session;
-//
-//
-//
-// });
+
 
 // user sent from frontend => to save to the db
 app.post('/login', (req, res) => {

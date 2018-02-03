@@ -10857,31 +10857,30 @@ var Home = function (_Component) {
 
         _this.state = {
             matejcsok: null
-
         };
         return _this;
     }
 
     _createClass(Home, [{
-        key: 'componentWillMount',
-        value: function componentWillMount() {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
             var _this2 = this;
 
             _axios2.default.get('/matejcsok').then(function (data) {
 
-                console.log(data.data);
+                console.log(data.status);
 
                 var fromDb = data.data;
 
-                if (!Array.isArray(data.data) && data.data == false) {
-                    _this2.props.notLoggedIn();
-                } else {
+                if (data.status == 200) {
 
                     _this2.props.loggedIn();
                     _this2.props.fillTodos(fromDb);
                 }
             }).catch(function (e) {
-                return console.log(e);
+
+                _this2.props.writeErrorMessage('Helytelen email cím, vagy jelszó!');
+                console.log(e);
             });
         }
     }, {
@@ -10890,7 +10889,7 @@ var Home = function (_Component) {
             var _this3 = this;
 
             if (!this.props.isLogged) {
-                console.log('redirectiong');
+                console.log('redirecting');
                 return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/login' });
             }
 
@@ -10900,7 +10899,9 @@ var Home = function (_Component) {
                 _react2.default.createElement(
                     'div',
                     { style: { display: 'flex' } },
-                    _react2.default.createElement('input', { style: { marginBottom: '20px', borderRadius: '4px', width: '400px', height: '34px', flex: '1' }, type: 'text', name: 'data', ref: function ref(node) {
+                    _react2.default.createElement('input', {
+                        style: { marginBottom: '20px', borderRadius: '4px', width: '400px', height: '34px', flex: '1' },
+                        type: 'text', name: 'data', ref: function ref(node) {
                             return _this3.inputField = node;
                         } }),
                     _react2.default.createElement(
@@ -10915,7 +10916,8 @@ var Home = function (_Component) {
                     )
                 ),
                 this.props.todos.map(function (todo, i) {
-                    return _react2.default.createElement(_Todo2.default, { style: { display: 'block' }, key: i, deleteTodo: _this3.props.deleteTodo, todo: todo, index: i });
+                    return _react2.default.createElement(_Todo2.default, { style: { display: 'block' }, key: i, deleteTodo: _this3.props.deleteTodo, todo: todo,
+                        index: i });
                 })
             );
         }
@@ -10931,7 +10933,8 @@ exports.default = (0, _reactRedux.connect)(function (state) {
     return {
         name: state.name,
         todos: state.todos,
-        isLogged: state.isLogged
+        isLogged: state.isLogged,
+        errorMessage: state.errorMessage
     };
 }, function (dispatch) {
     return {
@@ -10955,6 +10958,9 @@ exports.default = (0, _reactRedux.connect)(function (state) {
         },
         notLoggedIn: function notLoggedIn() {
             return dispatch({ type: 'NOT_LOGGED' });
+        },
+        writeErrorMessage: function writeErrorMessage(message) {
+            return dispatch({ type: 'WRITE_ERROR_MESSAGE', message: message });
         }
     };
 })(Home);
@@ -47143,7 +47149,11 @@ var Header = function (_Component) {
 
         var _this = _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).call(this, props));
 
-        _this.state = { activeItem: 'home' };
+        _this.state = {
+            activeItem: 'home'
+
+        };
+
         return _this;
     }
 
@@ -67211,15 +67221,6 @@ var Singup = function (_React$Component) {
         return _this;
     }
 
-    // componentDidMount() {
-    //     axios.get('/username').then(users => {
-    //         this.setState({user: users});
-    //         const dbUsers = users.data;
-    //         this.props.fillUsers(dbUsers);
-    //         console.log(users)
-    //     });
-    // }
-
     _createClass(Singup, [{
         key: 'render',
         value: function render() {
@@ -67238,6 +67239,11 @@ var Singup = function (_React$Component) {
                     'h1',
                     null,
                     'SingUp'
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { style: { color: 'red' } },
+                    this.props.errorMessage
                 ),
                 this.props.user.map(function (user) {
                     return user.email + '\n';
@@ -67294,7 +67300,10 @@ var Singup = function (_React$Component) {
 
 exports.default = (0, _reactRedux.connect)(function (state) {
     return {
-        user: state.user
+        name: state.name,
+        todos: state.todos,
+        isLogged: state.isLogged,
+        errorMessage: state.errorMessage
     };
 }, function (dispatch) {
     return {
@@ -67313,8 +67322,17 @@ exports.default = (0, _reactRedux.connect)(function (state) {
         fillTodos: function fillTodos(fromDb) {
             return dispatch({ type: 'FILL_TODOS', fromDb: fromDb });
         },
-        fillUsers: function fillUsers(dbUsers) {
-            return dispatch({ type: 'FILL_USERS', dbUsers: dbUsers });
+        loggedIn: function loggedIn() {
+            return dispatch({ type: 'LOGGED' });
+        },
+        notLoggedIn: function notLoggedIn() {
+            return dispatch({ type: 'NOT_LOGGED' });
+        },
+        writeErrorMessage: function writeErrorMessage(message) {
+            return dispatch({ type: 'WRITE_ERROR_MESSAGE', message: message });
+        },
+        singUpErrorMessage: function singUpErrorMessage(message) {
+            return dispatch({ type: 'SINGUP_ERROR_MESSAGE', message: message });
         }
     };
 })(Singup);
@@ -67385,6 +67403,7 @@ var Login = function (_React$Component) {
             } else if (this.props.isLogged) {
                 return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/' });
             }
+
             return _react2.default.createElement(
                 'div',
                 { style: { width: '80%', margin: '0 auto' } },
@@ -67392,6 +67411,11 @@ var Login = function (_React$Component) {
                     'h1',
                     null,
                     'LogIn'
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { style: { color: 'red' } },
+                    this.props.errorMessage
                 ),
                 _react2.default.createElement(
                     _semanticUiReact.Form,
@@ -67449,7 +67473,8 @@ exports.default = (0, _reactRedux.connect)(function (state) {
     return {
         name: state.name,
         todos: state.todos,
-        isLogged: state.isLogged
+        isLogged: state.isLogged,
+        errorMessage: state.errorMessage
     };
 }, function (dispatch) {
     return {
@@ -67473,6 +67498,9 @@ exports.default = (0, _reactRedux.connect)(function (state) {
         },
         notLoggedIn: function notLoggedIn() {
             return dispatch({ type: 'NOT_LOGGED' });
+        },
+        writeErrorMessage: function writeErrorMessage(message) {
+            return dispatch({ type: 'WRITE_ERROR_MESSAGE' });
         }
     };
 })(Login);
@@ -67544,7 +67572,9 @@ var actionTypes = {
     fillTodos: 'FILL_TODOS',
     fillUsers: 'FILL_USERS',
     loggedIn: 'LOGGED',
-    notLoggedIn: 'NOT_LOGGED'
+    notLoggedIn: 'NOT_LOGGED',
+    writeErrorMessage: 'WRITE_ERROR_MESSAGE',
+    singUpErrorMessage: 'SINGUP_ERROR_MESSAGE'
 };
 var name = function name() {
     var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
@@ -67604,11 +67634,26 @@ var isLogged = function isLogged() {
     }
 };
 
+var errorMessage = function errorMessage() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+    var action = arguments[1];
+
+    switch (action.type) {
+        case actionTypes.writeErrorMessage:
+            return action.message;
+        case actionTypes.singUpErrorMessage:
+            return action.message;
+        default:
+            return state;
+    }
+};
+
 var reducers = (0, _redux.combineReducers)({
     name: name,
     todos: todos,
     user: user,
-    isLogged: isLogged
+    isLogged: isLogged,
+    errorMessage: errorMessage
 
 });
 
@@ -67616,7 +67661,8 @@ var initStore = function initStore() {
     return (0, _redux.createStore)(reducers, {
         name: 'matejcsok',
         todos: ['megtanulni rendesen programozni'],
-        isLogged: false
+        isLogged: false,
+        errorMessage: ''
     }, (0, _reduxDevtoolsExtension.composeWithDevTools)((0, _redux.applyMiddleware)(_reduxThunk2.default)));
 };
 exports.default = initStore;
